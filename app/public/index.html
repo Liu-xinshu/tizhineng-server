@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>首页</title>
+    <style>
+        #list li{
+            list-style: none;
+            cursor:pointer;
+        }
+    </style>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <h1>组织架构接口测试</h1>
+    <div id="form">
+        <input type="text" placeholder="输入单位代码" />
+        <input type="text" placeholder="输入单位名称" />
+        <input type="text" placeholder="输入上级单位代码" />
+    </div>
+    <button class="btn btn-primary">添加单位</button>
+    <button class="btn btn-primary">编辑单位</button>
+    <button class="btn btn-primary">删除单位</button>
+    <button class="btn btn-primary">查看单位</button>
+    <button class="btn btn-primary">登录</button>
+    <ul id="list">
+
+    </ul>
+    <script src="request.js"></script>
+    <script>
+        const btns = document.getElementsByTagName('button');
+        const formDiv = document.getElementById('form');
+        const inputs = formDiv.getElementsByTagName('input');
+        btns[0].onclick = function(){
+            let orgCode = Number(inputs[0].value);
+            let orgName = inputs[1].value;
+            let parentCode = Number(inputs[2].value);
+            request('/org_chart/addDepartment', {
+                method: 'POST',
+                body: {
+                    orgCode,
+                    orgName,
+                    parentCode
+                }
+            })
+        }
+        btns[1].onclick = function(){
+            request('/org_chart/editDepartment', {
+                method: 'POST',
+                body: {
+                    orgCode: 10021,
+                    willUpdate: {
+                        orgName: '中原',
+                        parentCode: 10011
+                    }
+                }
+            })
+        }
+        btns[2].onclick = function(){
+            request('/org_chart/delDepartment', {
+                method: 'POST',
+                body: {
+                    orgCode: 10004,
+                    deep: true
+                }
+            })
+        }
+        btns[3].onclick = function(){
+            request('/org_chart/getDepartment').then(data => {
+                setList(data.data, document.getElementById('list'))
+            })
+        }
+        btns[4].onclick = function(){
+            request('/user/login', {
+                method: 'POST',
+                body: {
+                    userName: 'cdccdc',
+                    userPwd: 'cdc123'
+                }
+            }).then(data => {
+                console.log(data)
+            })
+        }
+        function setList(data, wrapper){
+            wrapper.innerHTML = data.map(item => {
+                return `<li>
+                    <div>
+                        <span data-parentcode="${item.parentCode}" data-orgcode="${item.orgCode}" class="orgcode">${item.orgCode}</span>
+                        <span>${item.parentCode}</span>
+                        <span>${item.orgLevel}</span>
+                        <span>${item.orgName}</span> 
+                        <span><b data-orgcode="${item.orgCode}" class="del">X</b></span>
+                    </div>
+                    
+                    </li>`
+            }).join('');
+        }
+
+        // 请求单条接口，重新渲染
+        function getDepartment(orgCode, oLi){
+            let oUl = document.createElement('ul');
+            request('/org_chart/getDepartment',{body: {parentCode: orgCode}}).then(data => {
+                    setList(data.data, oUl)
+                })
+                if(oLi.children.length === 1){
+                    oLi.appendChild(oUl);
+                }else{
+                    oLi.replaceChild(oUl,oLi.lastElementChild);
+                }
+        }
+        document.getElementById('list').onclick = function(ev){
+            if(ev.target.className === 'orgcode'){
+                let orgCode = ev.target.dataset.orgcode;
+                let parentCode = ev.target.dataset.parentcode;
+                let oLi = ev.target.parentNode.parentNode;
+                
+                getDepartment(orgCode, oLi);
+                
+            }
+            if(ev.target.className === 'del'){
+                let orgCode = ev.target.dataset.orgcode;
+                request('/org_chart/delDepartment', {
+                    body: {
+                        orgCode,
+                        deep: false
+                    },
+                    method: 'POST'
+                }).then(data => {
+                    console.log(data);
+                    if(data.code === 1){
+                        console.log(ev.target.parentNode.parentNode.parentNode);
+                    }
+                })
+            }
+        }
+    </script>
+</body>
+</html>
