@@ -75,14 +75,14 @@ module.exports = (addRule) => {
 
   // 登录的用户名规则
   addRule('username', (rule, value) => {
-    const userNameReg = /^\w{4,8}$/;
+    const userNameReg = /^\w{3,8}$/;
     if(!userNameReg.test(value)){
       return `字段${rule.type},必须是最少6位字母或数字`;
     }
   });
   // 登录的用户密码规则
   addRule('userpwd', (rule, value) => {
-    const userPwdReg = /^\w{6,}$/;
+    const userPwdReg = /^\w{5,}$/;
     if(!userPwdReg.test(value)){
       return `字段${rule.type},不符合规则，必须是最少6位字母或数字`;
     }

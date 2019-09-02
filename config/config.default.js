@@ -30,7 +30,7 @@ module.exports = appInfo => {
   // server config
   config.cluster = {
     listen: {
-      port: 8888
+      port: 8801
     }
   };
   // 静态模板引擎配置
@@ -59,14 +59,14 @@ module.exports = appInfo => {
       port: 3306,
       user: 'root',
       password: 'root',
-      database: 'market'
+      database: 'tizhineng'
     }
   };
   // 配置超级管理员
   const superAdmin = {
     identityName: '超级管理员',
     userName: 'superam',
-    userPwd: 'peach1qaz2wsx',
+    userPwd: 'superam',
     limitView: []
   };
   // add your user config here

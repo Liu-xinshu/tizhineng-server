@@ -53,17 +53,19 @@ class UserController extends Controller{
   }
   // 登录接口
   async login(){
-    // 验证用户明和面是否符合规则
+    console.log('login');
+    //验证用户明和面是否符合规则
     let isSucc = this.ctx.valid(this.ctx, {
       rules: {
         userName: 'username',
         userPwd: 'userpwd'
       }
     });
+    
     if(!isSucc){
       return;
     }
-    // 验证是否有用户名和密码
+    // // 验证是否有用户名和密码
     let {userName, userPwd} = this.ctx.request.body;
     // 判断是否是超级管理员
     if(userName === this.ctx.app.config.superAdmin.userName && userPwd === this.ctx.app.config.superAdmin.userPwd){
@@ -95,11 +97,10 @@ class UserController extends Controller{
     identity.id=identity_autho.identity_id And identity.id=${userResult[0].identity}
     And identity_autho.isAble=1
     `;
-
     let authoritys = await this.app.mysql.query(viewSql);
     // 该身份的所有的权限
     authoritys = authoritys.map(item => item.authority);
-    // 写入用户信息
+    // // 写入用户信息
     delete userResult[0].userPwd;
     let userInfo = {
       signTime:new Date().getTime(),
