@@ -3,14 +3,14 @@ module.exports = app => {
   const {List, log, addControllerRules} = app.config;
   const coreMiddlewareList = new List(app.config.coreMiddleware);
   // 文件列表中间件
-  // coreMiddlewareList.insert('staticList', 'bodyParser');
+  coreMiddlewareList.insert('staticList', 'bodyParser');
   coreMiddlewareList.insert('gzip', 'meta');
   coreMiddlewareList.insert('urlParse', 'static');
   coreMiddlewareList.insert('custom','overrideMethod');
   // 验证登录权限
-  coreMiddlewareList.insert('loginAuthority','bodyParser');
+  // coreMiddlewareList.insert('loginAuthority','bodyParser');
   // 验证身份权限
-  coreMiddlewareList.insert('identityAuthority', 'bodyParser');
+  // coreMiddlewareList.insert('identityAuthority', 'bodyParser');
 
   // // 单页面中间件
   // coreMiddlewareList.insert('singlePage', 'loginAuthority');

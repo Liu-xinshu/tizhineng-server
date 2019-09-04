@@ -26,6 +26,13 @@ module.exports = appInfo => {
 
   // add your middleware config here
   config.middleware = [];
+  //上传文件
+  config.multipart = {
+    mode: 'stream',
+    whitelist: [
+      '.xlsx','.xls'
+    ],
+  };
 
   // server config
   config.cluster = {
