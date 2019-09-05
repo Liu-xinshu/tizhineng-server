@@ -24,10 +24,16 @@ const formatData = function(data){
     return dataResult;
 }
 
-// const readFile = (filepath)=>new Promise((resolve)=>{
-//     const rs = fs.ReadStream(filepath);
-//     console.log(rs);
-// })
+const readFile = (filepath)=>new Promise((resolve)=>{
+    const rs = fs.ReadStream(filepath);
+    let buf = Buffer.from('');
+    rs.on('data',(chunk)=>{
+        buf = Buffer.concat([buf,chunk])
+    })
+    rs.on('end', () => {
+        resolve(buf);
+    })
+})
 
 class Management extends Controller{
     /**
@@ -98,7 +104,7 @@ class Management extends Controller{
             const filepath = path.join(__dirname,'../public/original/',filename+'.xlsx');
             ctx.attachment(filename+'.xlsx');
             ctx.set('Content-Type', 'application/octet-stream');
-            const rs = fs.createReadStream(filepath);
+            const rs = await readFile(filepath);
             ctx.body = rs;
         }else{ //data 导出部分数据
 
