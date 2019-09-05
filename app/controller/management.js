@@ -133,6 +133,25 @@ class Management extends Controller{
             ctx.body = buf;
         }
     }
+    /**
+     * 获取全部数据
+     */
+    async alldata(){
+        try{
+            let data = await this.service.management.alldata();
+            this.ctx.sendRes(this.ctx, {
+                code: 1,
+                status: 200,
+                data
+            })
+        }catch(error){
+            this.ctx.sendRes(this.ctx, {
+                code: 0,
+                status: 406,
+                msg: '获取数据出错'
+            })
+        }
+    }
 }
 
 

@@ -13,4 +13,6 @@ module.exports = app => {
   ///management/exportXlsx/data
   router.post('/management/exportXlsx/:original',controller.management.exportXlsx);
 
+  router.get('/management/alldata',controller.management.alldata);
+
 };

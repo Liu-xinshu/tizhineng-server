@@ -17,6 +17,10 @@ class ManagementService extends Service {
     }`);
     return res;
   }
+  async alldata(){
+    const res = await this.app.mysql.select('staff_list')
+    return res;
+  }
 }
 
 module.exports = ManagementService;
