@@ -9,7 +9,9 @@ const fs = require('fs');
 const awaitWriteStream = require('await-stream-ready').write;
 //管道读入一个虫洞。
 const sendToWormhole = require('stream-wormhole');
-
+/**
+ * [formatData 格式化表格数据]
+ */
 const formatData = function(data){
     let sheet1Data = data[0].data;
     let dataResult = [];
@@ -19,17 +21,19 @@ const formatData = function(data){
                 let key = sheet1Data[0][i];
                 let keyWord = key.match(/\((\w+)\)/)[1];
                 prev[keyWord] = value;
+                prev.id = uid(10);
                 return prev;
             },{}))
         }
     })
     return dataResult;
 }
+//获取表格首行数据
 const getColFirst = function(data){
     let sheet1Data = data[0].data;
     return sheet1Data[0];
 }
-
+//读取表格文件返回文件流
 const readFile = (filepath)=>new Promise((resolve)=>{
     const rs = fs.ReadStream(filepath);
     let buf = Buffer.from('');
@@ -67,7 +71,7 @@ class Management extends Controller{
             // console.log(filepath)
             let xlsxData = formatData(xlsx.parse(filepath));
             let res = await this.service.management.importXlsx(xlsxData);
-            if(res.insertId){
+            if(res.serverStatus){
                 ctx.sendRes(this.ctx, {
                     code: 1,
                     status: 200,
@@ -99,8 +103,11 @@ class Management extends Controller{
         let {filename='staffList',data} = ctx.request.body;
         const filepath = path.join(__dirname,'../public/original/',filename+'.xlsx');
         if(original === 'original'){  //导出原始模板
+            //设置ctx附件
             ctx.attachment(filename+'.xlsx');
+            //设置返回得内容格式为二进制流文件格式
             ctx.set('Content-Type', 'application/octet-stream');
+            //得到buffer文件
             const rs = await readFile(filepath);
             ctx.body = rs;
         }else if(original === 'data'){ //data 导出部分数据
@@ -112,9 +119,10 @@ class Management extends Controller{
                 })
                 return ;
             }
-            data = JSON.parse(data);
+            data = JSON.parse(data);  //要读取的id
             let res = await this.service.management.findData(data);
             let resdata = [getColFirst(xlsx.parse(filepath))].concat(res.map(item=>Object.values(item)));
+            //生成表格文件返回值为buffer 响应buffer回去不用在后台生成真实文件
             const buf = xlsx.build([
                 {
                     name:'sheet1',

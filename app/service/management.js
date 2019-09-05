@@ -8,6 +8,7 @@ class ManagementService extends Service {
         INSERT INTO staff_list (${Object.keys(data[0]).join(',')}) VALUES ${data.map(item=>{
             return `(${Object.keys(item).map(key=>`"${item[key]}"`).join(',')})`
           }).join(',')}`;
+    console.log(sql);
     let res = await this.app.mysql.query(sql)
     return res;
   }
