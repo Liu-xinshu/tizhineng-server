@@ -11,6 +11,12 @@ class ManagementService extends Service {
     let res = await this.app.mysql.query(sql)
     return res;
   }
+  async findData(arr){
+    const res = await this.app.mysql.query(`select * from staff_list WHERE ${
+      arr.map(id=>`id=${id*1}`).join(' or ')
+    }`);
+    return res;
+  }
 }
 
 module.exports = ManagementService;

@@ -2,12 +2,14 @@ const Controller = require('egg').Controller;
 const xlsx = require("node-xlsx");
 const path = require('path');
 const md5 = require('md5');
+const uid = require('node-uid');
 const fs = require('fs');
 // const tmp = require('tmp')
 // //故名思意 异步二进制 写入流
 const awaitWriteStream = require('await-stream-ready').write;
 //管道读入一个虫洞。
 const sendToWormhole = require('stream-wormhole');
+
 const formatData = function(data){
     let sheet1Data = data[0].data;
     let dataResult = [];
@@ -22,6 +24,10 @@ const formatData = function(data){
         }
     })
     return dataResult;
+}
+const getColFirst = function(data){
+    let sheet1Data = data[0].data;
+    return sheet1Data[0];
 }
 
 const readFile = (filepath)=>new Promise((resolve)=>{
@@ -41,7 +47,6 @@ class Management extends Controller{
      */
     async importXlsx(){
         const {ctx} = this;
-        // console.log(this.ctx.get('Content-Type'));
         if (this.ctx.get('Content-Type').startsWith('multipart/')) {
             const stream = await ctx.getFileStream();
             const filename = md5(stream.filename) + '_' + Date.now() + path
@@ -91,23 +96,32 @@ class Management extends Controller{
     async exportXlsx(){
         const {ctx} = this;
         const {original} = ctx.params;
-        const {filename} = ctx.request.body;
-        if(!filename){
-            ctx.sendRes(this.ctx, {
-                code: 0,
-                status: 400,
-                msg: '参数格式不正确'
-            })
-            return ;
-        }
+        let {filename='staffList',data} = ctx.request.body;
+        const filepath = path.join(__dirname,'../public/original/',filename+'.xlsx');
         if(original === 'original'){  //导出原始模板
-            const filepath = path.join(__dirname,'../public/original/',filename+'.xlsx');
             ctx.attachment(filename+'.xlsx');
             ctx.set('Content-Type', 'application/octet-stream');
             const rs = await readFile(filepath);
             ctx.body = rs;
-        }else{ //data 导出部分数据
-
+        }else if(original === 'data'){ //data 导出部分数据
+            if(!data){
+                ctx.sendRes(this.ctx, {
+                    code: 0,
+                    status: 400,
+                    msg: '参数格式不正确'
+                })
+                return ;
+            }
+            data = JSON.parse(data);
+            let res = await this.service.management.findData(data);
+            let resdata = [getColFirst(xlsx.parse(filepath))].concat(res.map(item=>Object.values(item)));
+            const buf = xlsx.build([
+                {
+                    name:'sheet1',
+                    data:resdata   
+                }
+            ])
+            ctx.body = buf;
         }
     }
 }
