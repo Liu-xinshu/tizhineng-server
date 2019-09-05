@@ -17,9 +17,13 @@ class ManagementService extends Service {
     }`);
     return res;
   }
-  async alldata(){
-    const res = await this.app.mysql.select('staff_list')
+  async alldata(limit,pageid){
+    const res = await this.app.mysql.select('staff_list',{
+      limit,
+      offset: pageid*limit
+    })
     return res;
+    
   }
 }
 

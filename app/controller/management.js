@@ -137,8 +137,9 @@ class Management extends Controller{
      * 获取全部数据
      */
     async alldata(){
+        let {limit=10,pageid=0} = this.ctx.request.query;
         try{
-            let data = await this.service.management.alldata();
+            let data = await this.service.management.alldata(limit*1,pageid*1);
             this.ctx.sendRes(this.ctx, {
                 code: 1,
                 status: 200,
