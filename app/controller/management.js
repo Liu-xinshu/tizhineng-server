@@ -121,7 +121,6 @@ class Management extends Controller{
                 return ;
             }
             data = JSON.parse(data);  //要读取的id
-            console.log(typeof data);
             let res = await this.service.management.findData(data);
             let resdata = [getColFirst(xlsx.parse(filepath))].concat(res.map(item=>Object.values(item)));
             //生成表格文件返回值为buffer 响应buffer回去不用在后台生成真实文件
