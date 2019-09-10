@@ -1,6 +1,7 @@
 'use strict';
 
 const Service = require('egg').Service;
+const uid = require('node-uid');
 
 class ManagementService extends Service {
   async importXlsx(data) {  //[{},{}]
@@ -27,8 +28,15 @@ class ManagementService extends Service {
     
   }
   async adddata(body){
-    const res = await this.app.mysql.insert('staff_list',body)
+    const res = await this.app.mysql.insert('staff_list',{...body,id:uid(10)})
     return res;
+  }
+  async removedata(id){
+    for(let v of id){
+      await this.app.mysql.delete('staff_list', {
+         id
+      });
+    }
   }
 }
 

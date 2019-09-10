@@ -16,5 +16,7 @@ module.exports = app => {
   router.get('/management/alldata',controller.management.alldata);
   //新增接口
   router.post('/management/adddata',controller.management.adddata);
+  //删除接口
+  router.post('/management/removedata',controller.management.removedata);
 
 };

@@ -156,6 +156,27 @@ class Management extends Controller{
     /** 
      * 删除数据
      */
+    async removedata(){
+        let {ctx,service} = this;
+        let {id} = ctx.request.body;
+        try{
+            id = JSON.parse(id);
+            await service.management.removedata(id)
+            this.ctx.sendRes(this.ctx, {
+                code: 1,
+                status: 200,
+                msg: '删除成功'
+            })
+        }catch(err){
+            console.log(err);
+            this.ctx.sendRes(this.ctx, {
+                code: 0,
+                status: 400,
+                msg: '参数有误！'
+            })
+        }
+        
+    }
     /**
      * 新增数据
      */
@@ -179,10 +200,11 @@ class Management extends Controller{
                 msg: '添加成功'
             })
         }catch(err){
+            console.log(err);
             this.ctx.sendRes(this.ctx, {
                 code: 0,
                 status: 400,
-                msg: err.response.message
+                msg: err.sqlMessage
             })
         }
     }
