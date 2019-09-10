@@ -58,6 +58,10 @@ module.exports = appInfo => {
       enable: false
     },
   };
+  
+  exports.static = {
+    prefix: '/public/'
+  };
 
   // mysql options
   exports.mysql = {

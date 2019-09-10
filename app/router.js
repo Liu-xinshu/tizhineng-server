@@ -12,7 +12,9 @@ module.exports = app => {
   ///management/exportXlsx/original
   ///management/exportXlsx/data
   router.post('/management/exportXlsx/:original',controller.management.exportXlsx);
-
+  //全部数据
   router.get('/management/alldata',controller.management.alldata);
+  //新增接口
+  router.post('/management/adddata',controller.management.adddata);
 
 };

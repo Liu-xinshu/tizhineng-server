@@ -153,6 +153,39 @@ class Management extends Controller{
             })
         }
     }
+    /** 
+     * 删除数据
+     */
+    /**
+     * 新增数据
+     */
+    async adddata(){
+        let {ctx} = this;
+        let keys = ['staffName','department','position','tel','address']
+        let flag = keys.every(item=>Object.keys(ctx.request.body).includes(item));
+        if(!flag){
+            this.ctx.sendRes(this.ctx, {
+                code: 0,
+                status: 400,
+                msg: '参数有误！'
+            })
+            return;
+        }
+        try{
+            await this.service.management.adddata(ctx.request.body);
+            this.ctx.sendRes(this.ctx, {
+                code: 1,
+                status: 200,
+                msg: '添加成功'
+            })
+        }catch(err){
+            this.ctx.sendRes(this.ctx, {
+                code: 0,
+                status: 400,
+                msg: err.response.message
+            })
+        }
+    }
 }
 
 

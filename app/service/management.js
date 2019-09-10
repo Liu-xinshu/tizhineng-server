@@ -18,12 +18,17 @@ class ManagementService extends Service {
     return res;
   }
   async alldata(limit,pageid){
-    const res = await this.app.mysql.select('staff_list',{
-      limit,
-      offset: pageid*limit
-    })
-    return res;
+    const res = await this.app.mysql.select('staff_list');
+    let startid = pageid*limit;
+    return {
+      size:res.length,
+      data:res.slice(startid,startid+limit)
+    }
     
+  }
+  async adddata(body){
+    const res = await this.app.mysql.insert('staff_list',body)
+    return res;
   }
 }
 
