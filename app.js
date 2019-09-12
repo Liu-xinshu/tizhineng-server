@@ -1,4 +1,5 @@
 module.exports = app => {
+  console.log(app);
   // 添加公共中间件
   const {List, log, addControllerRules} = app.config;
   const coreMiddlewareList = new List(app.config.coreMiddleware);
@@ -9,11 +10,11 @@ module.exports = app => {
   coreMiddlewareList.insert('custom','overrideMethod');
   // 验证登录权限
   // coreMiddlewareList.insert('loginAuthority','bodyParser');
-  // 验证身份权限
+  // // 验证身份权限
   // coreMiddlewareList.insert('identityAuthority', 'bodyParser');
 
   // // 单页面中间件
-  // coreMiddlewareList.insert('singlePage', 'loginAuthority');
+  // coreMiddlewareList.insert('singlePage');
   log(app.config.coreMiddleware);
 
   // 添加controller中请求参数的校验规则
