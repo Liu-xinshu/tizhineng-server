@@ -1,8 +1,8 @@
 /*
  * @Author: tao 
  * @Date: 2019-06-28 15:39:07 
- * @Last Modified by: tao
- * @Last Modified time: 2019-06-30 15:40:05
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2019-09-15 09:20:50
  * @func 生成目录列表
  */
 const fs = require('fs');
@@ -20,6 +20,7 @@ function createHref(dirList,pathname = '/'){
 }
 module.exports = () => {
   return async (ctx, next) => {
+    // console.log('staticList',ctx);
     const {pathname} = ctx.req.urlParse;
     // const {log} = ctx.helper;
     const isExis = fs.existsSync(path.join(rootStatic,pathname));

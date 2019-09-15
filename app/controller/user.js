@@ -1,6 +1,5 @@
 const Controller = require('egg').Controller;
 const jwt = require('jsonwebtoken');
-const {createRule, createProp} = require('../../utils/utils');
 // 签发token
 function createToken(userInfo, key){
   // 签发token

@@ -33,10 +33,10 @@ module.exports = appInfo => {
       '.xlsx','.xls'
     ],
   };
-  config.cors = {
-    origin:'http://localhost:3000',
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
-  };
+  // config.cors = {
+  //   origin:'http://localhost:3000',
+  //   allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+  // };
   // server config
   config.cluster = {
     listen: {
