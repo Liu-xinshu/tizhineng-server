@@ -5,6 +5,14 @@
  */
 module.exports = app => {
   const { router, controller } = app;
+  //首页 出勤
+  router.get('/home/checkWork',controller.home.checkWork);
+  //首页 日报
+  router.get('/home/daily',controller.home.daily);
+  //首页 客户
+  router.get('/home/client',controller.home.client);
+  //首页 活动数据
+  router.get('/home/activeData',controller.home.activeData);
   // 用户登录的接口
   router.post('/user/login', controller.user.login);
   // 用户管理导入接口

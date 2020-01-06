@@ -6,9 +6,11 @@ const uid = require('node-uid');
 class ManagementService extends Service {
   async importXlsx(data) {  //[{},{}]
     const sql = `
-        INSERT INTO staff_list (${Object.keys(data[0]).join(',')}) VALUES ${data.map(item=>{
-            return `(${Object.keys(item).map(key=>`"${item[key]}"`).join(',')})`
-          }).join(',')}`;
+        INSERT INTO staff_list (${Object.keys(data[0]).join(',')}) VALUES (${
+          data.map(item=>{
+            return `${Object.keys(item).map(key=>`"${item[key]}"`).join(',')}`
+          }).toString().replace(/\,$/,'')
+        })`;
     let res = await this.app.mysql.query(sql)
     return res;
   }
@@ -19,11 +21,12 @@ class ManagementService extends Service {
     return res;
   }
   async alldata(limit,pageid){
-    const res = await this.app.mysql.select('staff_list');
+    let res = await this.app.mysql.select('staff_list');
     let startid = pageid*limit;
+    // console.log(res.reverse());
     return {
       size:res.length,
-      data:res.slice(startid,startid+limit)
+      data:res.reverse().slice(startid,startid+limit)
     }
     
   }
