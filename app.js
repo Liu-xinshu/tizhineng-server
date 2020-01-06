@@ -11,7 +11,8 @@ module.exports = app => {
   coreMiddlewareList.insert('loginAuthority','bodyParser');
   // 验证身份权限
   coreMiddlewareList.insert('identityAuthority', 'bodyParser');
-
+  // 缓存
+  coreMiddlewareList.insert('catch','bodyParser');
   // 单页面中间件
   coreMiddlewareList.insert('singlePage', 'loginAuthority');
   log(app.config.coreMiddleware);

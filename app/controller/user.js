@@ -1,6 +1,14 @@
 const Controller = require('egg').Controller;
 const jwt = require('jsonwebtoken');
 // 签发token
+
+function Timeout(){
+  return new Promise((resolve)=>{
+      setTimeout(()=>{
+        resolve();
+      },2000)
+  })
+}
 function createToken(userInfo, key){
   // 签发token
   let token = jwt.sign(userInfo, key);

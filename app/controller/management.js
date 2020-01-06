@@ -9,6 +9,13 @@ const fs = require('fs');
 const awaitWriteStream = require('await-stream-ready').write;
 //管道读入一个虫洞。
 const sendToWormhole = require('stream-wormhole');
+function Timeout(time){
+    return new Promise((resolve)=>{
+        setTimeout(()=>{
+          resolve();
+        },time)
+    })
+  }
 /**
  * [formatData 格式化表格数据]
  */
@@ -141,6 +148,7 @@ class Management extends Controller{
         let {limit=10,pageid=0} = this.ctx.request.query;
         try{
             let data = await this.service.management.alldata(limit*1,pageid*1);
+            await Timeout(2000);
             this.ctx.sendRes(this.ctx, {
                 code: 1,
                 status: 200,
